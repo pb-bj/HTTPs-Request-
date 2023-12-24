@@ -2,23 +2,32 @@ import React, { useEffect, useState } from 'react'
 
 const ApiCall = () => {
   const [ products, setProducts ] = useState([]);
+  const [ loadingState, setLoadingState ] = useState(false);
+
   useEffect(() => {
+    setLoadingState(true);
     const getAllProducts = async () => {
       const response = await fetch('https://dummyjson.com/products');
       const data = await response.json();
-      
+
         if( data && data.products && data.products.length > 0) {
-          setProducts(data.products);
-          console.log(data.products)
+          setTimeout(() => {  // setTime out just for the waiting scenario
+            setProducts(data.products);
+            setLoadingState(false)
+          }, 3000)
         }
     }
 
     getAllProducts();
   }, [])
 
+  if(loadingState) {
+    return <p>Loading... Please wait</p>
+  }
+
   return (
     <div style={{
-        // display: 'flex',
+        // display: 'flex',  
         // alignItems: 'center',
         // justifyContent: 'space-between',
         // gap: '15px',
