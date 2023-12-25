@@ -7,23 +7,28 @@ const ApiCall = () => {
   useEffect(() => {
     setLoadingState(true);
     const getAllProducts = async () => {
-      const response = await fetch('https://dummyjson.com/products');
-      const data = await response.json();
-
-        if( data && data.products && data.products.length > 0) {
-          setTimeout(() => {  // setTime out just for the waiting scenario
-            setProducts(data.products);
-            setLoadingState(false)
-          }, 3000)
-        }
+      try {
+        const response = await fetch('https://dummyjson.com/product');
+          if(!response.ok) throw Error('Did not find the products');
+        const data = await response.json();
+  
+          if( data && data.products && data.products.length > 0) {
+            setTimeout(() => {  // setTime out just for the waiting scenario
+              setProducts(data.products);
+              setLoadingState(false)
+            }, 3000)
+          }
+      } catch(err) {
+        console.log(err.message);
+      }
     }
-
     getAllProducts();
   }, [])
 
   if(loadingState) {
     return <p>Loading... Please wait</p>
   }
+
 
   return (
     <div style={{
